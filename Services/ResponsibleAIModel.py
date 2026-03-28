@@ -28,7 +28,7 @@ class ResponsibleAIModel(BaseModel):
                 base_url= OPENAI_BASE_URL,
                 model= LLM_MODEL,
                 temperature=0.4,
-                max_tokens= 1000,
+                max_tokens= 100,
                 max_retries=2
                 )
             
