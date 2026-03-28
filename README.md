@@ -1,5 +1,3 @@
-# SafeAI
-Experiment about safe AI usage 
 # 🛡️ Responsible AI Experiments
 
 A collection of hands-on experiments focused on building **safe, reliable, and production-ready AI systems**.
