@@ -21,16 +21,8 @@ Build a **safe AI pipeline** that:
 
 ## 🧠 Architecture
 
-```
-User Input
-   ↓
-[LLM Guard - Input Validation]
-   ↓
-LangChain + OpenAI LLM
-   
-   ↓
-Safe Response
-```
+![Architecture Diagram](/images/llm-guard.png)
+
 
 ---
 
