@@ -1,40 +1,37 @@
-from langchain_openai import ChatOpenAI
-
-from langchain.messages import HumanMessage 
-
-from dotenv import load_dotenv
-import os 
-from pydantic import BaseModel
+import requests    
 
 
-load_dotenv()
-
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_BASE_URL= os.getenv("OPENAI_BASE_URL")
-LLM_MODEL= os.getenv("LLM_MODEL")
-    
-
-class ResponsibleAIModel(BaseModel):
-    
+class ResponsibleAIModel:
+    url = "http://localhost:11434/api/generate"
 
     
-    llm : ChatOpenAI | None = None 
+     
     
     def init_model(self):
-        try:
+        pass 
+    
+    def invoke(self,system_prompt:str, user_prompt:str)-> str :
+        payload = {
+                "model": "tinyllama",
+                "system" : system_prompt,
+                "prompt": user_prompt, 
+                "stream": False
+            }
+        
+        result = None 
+        try:            
+
+            response = requests.post(self.url, json=payload)
+            result = response.json()['response']
+        except Exception as e:
+            result="Error from LLM : " + str(e)
             
-            self.llm = ChatOpenAI(
-                api_key=OPENAI_API_KEY,
-                base_url= OPENAI_BASE_URL,
-                model= LLM_MODEL,
-                temperature=0.4,
-                max_tokens= 100,
-                max_retries=2
-                )
+            print(str(e))
+        
+        return result
             
-            print("LLM intiailize succcessfully")
-        except :
-            llm = None 
+
+
     
     
     
