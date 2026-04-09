@@ -4,23 +4,17 @@ from tiktoken import Encoding
 from llm_guard.input_scanners import TokenLimit
 
 
-_encoding:Encoding = None 
-#'o200k_base'
 
-_encoding = tiktoken.encoding_for_model(model_name='gpt-4o-mini')   
-
-
-
-print('hello')
-
+ 
 
 class TokenlimitService:
     VALID_MODELS = ["gpt-4o", "gpt-4o-mini"] 
     ENCODING_NAME = 'o200k_base'
+    _encoding:Encoding = None 
     
     def __init__(self, llm_model:str = 'gpt-4o-mini', token_limit:int = 5000):
         
-        if not llm_model in self.VALID_MODELS :
+        if not llm_model.lower() in self.VALID_MODELS :
             raise ValueError('Token limit services supports only valid models ' , self.VALID_MODELS )
         
         
