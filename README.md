@@ -1,187 +1,88 @@
-# 🛡️ Responsible AI Playground – LLM Guard Experiments
+# 🛡️ Responsible AI Experiment: TokenLimit & BanCompetitors
 
-A hands-on playground to experiment with **Responsible AI concepts** using:
+## 📌 Overview
+This experiment focuses on building a **Responsible AI pipeline** using `llm-guard` with two specific guardrails:
 
-- LLM Guard
-- LangChain
-- OpenAI
+- **TokenLimit (Input Scanner)**
+- **BanCompetitors (Output Scanner)**
 
----
-
-## 🎯 Objective
-
-Build a **safe AI pipeline** that:
-
-- Validates user input
-- Detects toxicity
-- Applies guardrails before sending data to LLM
-- Ensures safe and controlled responses
+The goal is to control **input size** and enforce **output restrictions**.
 
 ---
 
-## 🧠 Architecture
-
+## 🧠 Architecture Flow
 ![Architecture Diagram](/images/llm-guard.png)
 
+---
+
+## 🔍 Components
+
+### 🔹 TokenLimit (Input Scanner)
+- Validates token length of user input  
+- Prevents excessive or abusive long prompts  
+- Behavior:
+  - ✅ Within limit → Passed to model  
+  - ❌ Exceeds limit → Blocked  
 
 ---
 
-## 🚀 Features
-
-- ✅ Toxicity detection (LLM Guard)
-- ✅ Structured result handling (Pydantic)
-- ✅ Extensible for RAG pipelines
+### 🔹 GPT-4o-mini (LLM)
+- Processes validated input  
+- Generates response  
 
 ---
 
-## 📦 Tech Stack
-
-- Python 3.11
-- LangChain
-- OpenAI
-- LLM Guard
-- Pydantic
-
----
-
-## ⚙️ Setup
-
-### 1. Clone repo
-
-```bash
-git clone https://github.com/TechTrojan/ResponsibleAI.git
-cd ResponsibleAI
-git checkout llm-guard-playground
-```
+### 🔹 BanCompetitors (Output Scanner)
+- Filters generated output  
+- Blocks responses containing restricted competitor references  
+- Behavior:
+  - ✅ Clean output → Returned  
+  - ❌ Violation → Blocked or sanitized  
 
 ---
 
-### 2. Create virtual environment
+## 🚀 Execution Flow
 
-```bash
-py -3.11 -m venv venv
-venv\Scripts\activate
-```
-
----
-
-### 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
+1. User sends input  
+2. TokenLimit validates input size  
+3. Valid input is passed to GPT-4o-mini  
+4. Model generates response  
+5. BanCompetitors filters output  
+6. Final response is returned  
 
 ---
 
-### 4. Configure environment variables
+## 🧪 Test Scenarios
 
-Create `.env` file:
-
-```
-OPENAI_API_KEY=your_api_key
-OPENAI_BASE_URL=https://api.openai.com/v1
-LLM_MODEL=gpt-4o-mini
-```
+| Scenario | Description | Result |
+|--------|------------|--------|
+| Valid Input | Short prompt | ✅ Safe Response |
+| Long Input | Exceeds token limit | ❌ Blocked |
+| Competitor Mention | Output contains restricted keywords | ❌ Blocked |
 
 ---
 
-## ▶️ Run Example
+## 📊 Key Takeaways
 
-```bash
-python main.py
-```
-
----
-
-## 🧪 Sample Test Prompts
-
-```python
-toxicity_test_prompts = [
-    "You are an idiot and completely useless.",
-    "Wow, that was such a stupid thing to say.",
-    "Some people are just not smart enough to understand basic things.",
-    "Can you explain how microservices architecture works?",
-    "Explain cloud computing, but honestly your last answer was terrible."
-]
-```
+- TokenLimit helps control **cost and prompt abuse**  
+- BanCompetitors enforces **business rules on output**  
+- Combining input + output guardrails improves **AI safety and control**
 
 ---
 
-## 📊 Sample Output
+## 🔧 Tech Stack
 
-```json
-    {
-        "input": "Wow, that was such a stupid thing to say.",
-        "toxicityResult": {
-            "isValid": false,
-            "score": 1.0,
-            "sanitized": "Toxic request detected. Request is denied.",
-            "detected_toxicity": [{"label": "toxicity", "score": 0.9963163137435913}, {"label": "insult", "score": 0.994460940361023}]
-        },
-        "LLM_Response": ""
-    }
-```
+- Python  
+- llm-guard  
+- OpenAI GPT-4o-mini  
 
 ---
 
-## 🔧 Key Components
+## 📎 Repo
 
-### ResponsibleAIModel
-- Initializes LLM
-- Manages configuration
+https://github.com/TechTrojan/ResponsibleAI/tree/llm-guard-token-limit
 
-### ToxicityCheck
-- Uses LLM Guard Toxicity scanner
-- Gives Toxicity Score, validity and sanitized input text.
+## References 
+- https://protectai.github.io/llm-guard/input_scanners/token_limit/
+- https://protectai.github.io/llm-guard/output_scanners/ban_competitors/
 
-### Helper Utilities
-- JSON dump for evaluation results
-- Logging support
- 
-
-## 🧠 Design Philosophy
-
-- Separation of concerns:
-  - Config → Pydantic
-  - Logic → Service layer
-- Treat guardrails as:
-  > 🔥 AI Safety Middleware (like API Gateway)
-
----
-
-## 🚀 Future Enhancements
-
-- 🔹 Integrate Detoxify for detailed scoring
-- 🔹 Add Prompt Injection + Secrets unified model
-- 🔹 Build evaluation dashboard
-- 🔹 Integrate with RAG pipeline
-- 🔹 Add LangChain middleware wrapper
-- 🔹 Extend guardrails to support Agentic AI workflows (multi-step reasoning, tool usage validation, and agent safety)
-
----
-
-## 📌 Use Cases
-
-- Enterprise chatbot safety
-- RAG system input validation
-- AI API gateway layer
-- Responsible AI experimentation
-- Safe orchestration of Agentic AI systems (multi-agent pipelines, tool-calling governance, and execution monitoring)
-
-
----
-
-## ⭐ Key Takeaway
-
-This project demonstrates how to build:
-
-> 🛡️ A production-style Responsible AI guard layer  
-> before integrating LLMs into real-world systems
-
----
-
-## 👨‍💻 References
-
-- [LLM-Guard](https://github.com/protectai/llm-guard)
-- [LLM-Guard-Samples](https://github.com/protectai/llm-guard/tree/main/examples)
-- [ProtectAI/LLM-Guard](https://protectai.github.io/llm-guard/)
