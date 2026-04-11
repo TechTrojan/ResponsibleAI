@@ -129,20 +129,20 @@ Response Style:
         
         response=""
         
-        if final_result['tokenLimitResult']["is_valid"]:
-            response = model.llm.invoke([ SystemMessage(content=system_prompt),  
+        
+        response = model.llm.invoke([ SystemMessage(content=system_prompt),  
                                           HumanMessage(content=token_limit_result["sanitized_prompt"])
                             ])
-            final_result['LLM_Response'] = response.content
+        final_result['LLM_Response'] = response.content
             
             ##check BanCompetitors 
-            ban_comp_result = ban_competition_check.CheckCompetitors(final_prompt,response.content )                    
-            final_result['ban_comp_result'] = ban_comp_result
+        ban_comp_result = ban_competition_check.CheckCompetitors(final_prompt,response.content )                    
+        final_result['ban_comp_result'] = ban_comp_result
             
-            if  not ban_comp_result['is_valid'] :            
+        if  not ban_comp_result['is_valid'] :            
                   final_result['LLM_Response'] = 'I can help you explore the best options available on Amazon.'
         else:
-            final_result['LLM_Response'] = ''
+            final_result['LLM_Response'] = response.content
             
         
               
